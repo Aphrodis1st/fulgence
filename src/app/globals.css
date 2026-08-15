@@ -41,6 +41,8 @@ html {
   scroll-behavior: smooth;
   scrollbar-width: thin;
   scrollbar-color: #7a5530 #f4ead8;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
@@ -49,6 +51,8 @@ body {
   color: #2c1f0e;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 ::-webkit-scrollbar {

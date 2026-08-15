@@ -142,6 +142,7 @@ function NavBar() {
         top: 0,
         left: 0,
         right: 0,
+        width: '100%',
         zIndex: 100,
         backgroundColor: 'rgba(26,18,8,0.97)',
         backdropFilter: 'blur(8px)',
@@ -176,8 +177,8 @@ function NavBar() {
             <Image
               src="/images/logo.png"
               alt="GEOSURVEY ENGINEERING Ltd"
-              width={48}
-              height={48}
+              fill
+              sizes="48px"
               priority
               style={{ objectFit: 'cover', objectPosition: 'center 12%' }}
             />
@@ -285,13 +286,176 @@ function NavBar() {
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 function HeroSection() {
-  const w = useWindowWidth()
+  const w = useWindowWidth(390)
   const isMobile = w < 640
+
+  const copy = (
+    <>
+      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: isMobile ? '1rem' : '1.25rem', border: '1px solid rgba(196,135,42,0.4)', padding: '6px 12px' }}>
+        <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#c4872a', display: 'inline-block', flexShrink: 0 }} />
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#c4872a', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+          Kigali, Rwanda · Est. 2020
+        </span>
+      </div>
+
+      <h1
+        style={{
+          fontFamily: 'var(--font-display)',
+          fontSize: isMobile ? 'clamp(2.15rem, 10vw, 2.75rem)' : 'clamp(3rem, 7vw, 6.5rem)',
+          color: '#faf5ec',
+          lineHeight: 1.05,
+          letterSpacing: '-0.01em',
+          margin: '0 0 0.85rem',
+          maxWidth: 860,
+        }}
+      >
+        Ground Truth
+        <br />
+        <em style={{ color: '#c4872a' }}>Engineered</em> for
+        <br />
+        Your Project.
+      </h1>
+
+      <p
+        style={{
+          fontFamily: 'var(--font-body)',
+          fontSize: isMobile ? 14 : 'clamp(1rem, 2vw, 1.2rem)',
+          color: '#a8bcc8',
+          lineHeight: 1.7,
+          maxWidth: 540,
+          margin: isMobile ? '0 0 1.75rem' : '0 0 2.5rem',
+          fontWeight: 300,
+        }}
+      >
+        Professional Geotechnical Engineering and Building Consultancy. We transform subsurface uncertainty into reliable engineering decisions — from investigation to interpretation.
+      </p>
+
+      <div
+        style={{
+          display: 'flex',
+          gap: isMobile ? '0.85rem' : '1rem',
+          flexDirection: isMobile ? 'column' : 'row',
+          flexWrap: 'wrap',
+          alignItems: isMobile ? 'stretch' : 'center',
+        }}
+      >
+        <a
+          href="#services"
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: 12,
+            fontWeight: 600,
+            color: '#1a1208',
+            backgroundColor: '#c4872a',
+            padding: isMobile ? '13px 20px' : '14px 32px',
+            textDecoration: 'none',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            display: 'inline-block',
+            textAlign: 'center',
+            transition: 'background-color 0.2s',
+          }}
+          onMouseEnter={(e) => ((e.target as HTMLElement).style.backgroundColor = '#e8b554')}
+          onMouseLeave={(e) => ((e.target as HTMLElement).style.backgroundColor = '#c4872a')}
+        >
+          Our Services
+        </a>
+        <a
+          href="#contact"
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: 12,
+            fontWeight: 500,
+            color: '#e8d4b8',
+            textDecoration: 'none',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: isMobile ? 'center' : 'flex-start',
+            gap: '0.5rem',
+            padding: isMobile ? '12px 0' : '14px 0',
+            borderBottom: '1px solid rgba(232,212,184,0.3)',
+          }}
+        >
+          Request a Quotation <span style={{ fontSize: 15 }}>→</span>
+        </a>
+      </div>
+    </>
+  )
+
+  const stats = (
+    <div
+      style={{
+        marginTop: isMobile ? '2rem' : '4rem',
+        display: 'grid',
+        gridTemplateColumns: isMobile ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, 1fr)',
+        gap: isMobile ? '1.25rem 1rem' : '0',
+        borderTop: '1px solid rgba(196,135,42,0.2)',
+        paddingTop: isMobile ? '1.35rem' : '1.75rem',
+        maxWidth: 720,
+        width: '100%',
+      }}
+    >
+      {[
+        { value: '8+', label: 'Service Disciplines' },
+        { value: 'ASTM', label: 'Testing Standards' },
+        { value: 'RW', label: 'Rwanda & Beyond' },
+        { value: '100%', label: 'Technical Focus' },
+      ].map((s) => (
+        <div key={s.label} style={{ minWidth: 0, paddingRight: isMobile ? 0 : '1.5rem' }}>
+          <div style={{ fontFamily: 'var(--font-display)', fontSize: isMobile ? 24 : 28, color: '#c4872a', lineHeight: 1, marginBottom: 4 }}>{s.value}</div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: isMobile ? 8 : 9, color: '#7a92a8', letterSpacing: '0.08em', textTransform: 'uppercase' }}>{s.label}</div>
+        </div>
+      ))}
+    </div>
+  )
+
+  if (isMobile) {
+    return (
+      <section id="hero" style={{ backgroundColor: '#1a1208', width: '100%', overflow: 'hidden' }}>
+        <div style={{ position: 'relative', width: '100%', backgroundColor: '#1a1208' }}>
+          <Image
+            src="/images/drill-rig-blue.png"
+            alt="GEOSURVEY field team with drilling rig on site"
+            width={1024}
+            height={768}
+            priority
+            sizes="100vw"
+            style={{ width: '100%', height: 'auto', display: 'block' }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(to bottom, rgba(26,18,8,0.15) 0%, rgba(26,18,8,0.35) 55%, #1a1208 100%)',
+              pointerEvents: 'none',
+            }}
+            aria-hidden
+          />
+        </div>
+        <div style={{ position: 'relative', padding: '1.5rem 1.25rem 2.75rem', width: '100%', boxSizing: 'border-box' }}>
+          {copy}
+          {stats}
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section
       id="hero"
-      style={{ minHeight: '100vh', backgroundColor: '#1a1208', position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', paddingBottom: isMobile ? '3rem' : '5rem' }}
+      style={{
+        minHeight: '100vh',
+        backgroundColor: '#1a1208',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+        paddingBottom: '5rem',
+        overflow: 'hidden',
+        width: '100%',
+      }}
     >
       <div
         style={{
@@ -300,7 +464,7 @@ function HeroSection() {
           backgroundImage: 'url(/images/drill-rig-blue.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center 40%',
-          backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+          backgroundAttachment: 'fixed',
           backgroundRepeat: 'no-repeat',
           opacity: 0.28,
         }}
@@ -313,77 +477,9 @@ function HeroSection() {
       </div>
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '50%', background: 'linear-gradient(to bottom, transparent, #1a1208)', pointerEvents: 'none' }} aria-hidden />
 
-      <div style={{ position: 'relative', maxWidth: 1280, margin: '0 auto', padding: isMobile ? '0 1.25rem' : '0 2rem', width: '100%' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem', border: '1px solid rgba(196,135,42,0.4)', padding: '6px 12px' }}>
-          <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#c4872a', display: 'inline-block', flexShrink: 0 }} />
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#c4872a', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-            Kigali, Rwanda · Est. 2020
-          </span>
-        </div>
-
-        <h1
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: isMobile ? 'clamp(2.6rem, 12vw, 3.5rem)' : 'clamp(3rem, 7vw, 6.5rem)',
-            color: '#faf5ec',
-            lineHeight: 1.04,
-            letterSpacing: '-0.01em',
-            margin: '0 0 1rem',
-            maxWidth: 860,
-          }}
-        >
-          Ground Truth
-          <br />
-          <em style={{ color: '#c4872a' }}>Engineered</em> for
-          <br />
-          Your Project.
-        </h1>
-
-        <p style={{ fontFamily: 'var(--font-body)', fontSize: isMobile ? 15 : 'clamp(1rem, 2vw, 1.2rem)', color: '#a8bcc8', lineHeight: 1.75, maxWidth: 540, margin: '0 0 2.5rem', fontWeight: 300 }}>
-          Professional Geotechnical Engineering and Building Consultancy. We transform subsurface uncertainty into reliable engineering decisions — from investigation to interpretation.
-        </p>
-
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-          <a
-            href="#services"
-            style={{ fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 600, color: '#1a1208', backgroundColor: '#c4872a', padding: isMobile ? '12px 24px' : '14px 32px', textDecoration: 'none', letterSpacing: '0.08em', textTransform: 'uppercase', display: 'inline-block', transition: 'background-color 0.2s' }}
-            onMouseEnter={(e) => ((e.target as HTMLElement).style.backgroundColor = '#e8b554')}
-            onMouseLeave={(e) => ((e.target as HTMLElement).style.backgroundColor = '#c4872a')}
-          >
-            Our Services
-          </a>
-          <a
-            href="#contact"
-            style={{ fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 500, color: '#e8d4b8', textDecoration: 'none', letterSpacing: '0.08em', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: isMobile ? '12px 0' : '14px 0', borderBottom: '1px solid rgba(232,212,184,0.3)' }}
-          >
-            Request a Quotation <span style={{ fontSize: 15 }}>→</span>
-          </a>
-        </div>
-
-        {/* Stats */}
-        <div
-          style={{
-            marginTop: isMobile ? '2.5rem' : '4rem',
-            display: 'grid',
-            gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
-            gap: isMobile ? '1.5rem 0' : '0',
-            borderTop: '1px solid rgba(196,135,42,0.2)',
-            paddingTop: '1.75rem',
-            maxWidth: 720,
-          }}
-        >
-          {[
-            { value: '8+', label: 'Service Disciplines' },
-            { value: 'ASTM', label: 'Testing Standards' },
-            { value: 'RW', label: 'Rwanda & Beyond' },
-            { value: '100%', label: 'Technical Focus' },
-          ].map((s) => (
-            <div key={s.label} style={{ paddingRight: '1.5rem' }}>
-              <div style={{ fontFamily: 'var(--font-display)', fontSize: 28, color: '#c4872a', lineHeight: 1, marginBottom: 4 }}>{s.value}</div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: '#7a92a8', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
+      <div style={{ position: 'relative', maxWidth: 1280, margin: '0 auto', padding: '0 2rem', width: '100%', boxSizing: 'border-box' }}>
+        {copy}
+        {stats}
       </div>
     </section>
   )
@@ -393,8 +489,27 @@ function HeroSection() {
 function ApproachStrip() {
   const steps = ['Understand the Project', 'Investigate the Ground', 'Characterize the Materials', 'Evaluate Engineering Behavior', 'Identify Geotechnical Risks', 'Develop Recommendations', 'Communicate Findings']
   return (
-    <div style={{ backgroundColor: '#2c1f0e', padding: '1.25rem 1.25rem', overflowX: 'auto' }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', alignItems: 'center', flexWrap: 'nowrap', justifyContent: 'space-between', minWidth: 640 }}>
+    <div
+      style={{
+        backgroundColor: '#2c1f0e',
+        padding: '1.25rem 0',
+        overflowX: 'auto',
+        maxWidth: '100%',
+        WebkitOverflowScrolling: 'touch',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: 'nowrap',
+          justifyContent: 'space-between',
+          width: 'max-content',
+          minWidth: '100%',
+          boxSizing: 'border-box',
+          padding: '0 1.25rem',
+        }}
+      >
         {steps.map((step, i) => (
           <div key={step} style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0 0.75rem' }}>
@@ -893,7 +1008,7 @@ function Footer() {
                 src="/images/logo.png"
                 alt="GEOSURVEY ENGINEERING Ltd"
                 width={160}
-                height={160}
+                height={137}
                 style={{ width: 140, height: 'auto', display: 'block' }}
               />
             </div>
@@ -949,9 +1064,9 @@ function Footer() {
 // ─── App ──────────────────────────────────────────────────────────────────────
 export function LandingPage() {
   return (
-    <div style={{ fontFamily: 'var(--font-body)' }}>
+    <div style={{ fontFamily: 'var(--font-body)', overflowX: 'hidden', maxWidth: '100%' }}>
       <NavBar />
-      <main style={{ paddingTop: 72 }}>
+      <main style={{ paddingTop: 72, overflowX: 'hidden', maxWidth: '100%' }}>
         <HeroSection />
         <ApproachStrip />
         <AboutSection />
