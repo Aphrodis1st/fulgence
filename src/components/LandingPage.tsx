@@ -2,6 +2,7 @@
 
 import { useState, useEffect, type CSSProperties, type FormEvent, type ReactNode } from 'react'
 import Image from 'next/image'
+import { AnimatePresence, motion } from 'framer-motion'
 
 function useWindowWidth(fallback = 1024) {
   const [width, setWidth] = useState(fallback)
@@ -529,6 +530,103 @@ function ApproachStrip() {
   )
 }
 
+// ─── About Gallery (sliding) ──────────────────────────────────────────────────
+const GALLERY_IMAGES = [
+  '/images/gallery/gallery-01.png',
+  '/images/gallery/gallery-02.png',
+  '/images/gallery/gallery-03.png',
+  '/images/gallery/gallery-04.png',
+  '/images/gallery/gallery-05.png',
+  '/images/gallery/gallery-06.png',
+  '/images/gallery/gallery-07.png',
+  '/images/gallery/gallery-08.png',
+  '/images/gallery/gallery-09.png',
+  '/images/gallery/gallery-10.png',
+  '/images/gallery/gallery-11.png',
+  '/images/gallery/gallery-12.png',
+]
+
+function AboutGallery({ isMobile }: { isMobile: boolean }) {
+  const [idx, setIdx] = useState(0)
+  const total = GALLERY_IMAGES.length
+
+  useEffect(() => {
+    const timer = setInterval(() => setIdx((prev) => (prev + 1) % total), 5000)
+    return () => clearInterval(timer)
+  }, [total])
+
+  const slideIn = {
+    initial: { x: '100%', opacity: 0 },
+    animate: { x: 0, opacity: 1, transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] as const } },
+    exit: { x: '-30%', opacity: 0, transition: { duration: 0.5, ease: 'easeIn' as const } },
+  }
+
+  return (
+    <div>
+      <div style={{ position: 'relative', marginBottom: '1.5rem', overflow: 'hidden' }}>
+        <div style={{ position: 'relative', width: '100%', height: isMobile ? 220 : 300 }}>
+          <AnimatePresence initial={false}>
+            <motion.div
+              key={`top-${idx}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { duration: 0.8, ease: 'easeOut' as const } }}
+              exit={{ opacity: 0, transition: { duration: 0.5, ease: 'easeIn' as const } }}
+              style={{ position: 'absolute', inset: 0 }}
+            >
+              <Image
+                src={GALLERY_IMAGES[idx % total]}
+                alt="Field work"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                style={{ objectFit: 'cover' }}
+              />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '40%', background: 'linear-gradient(to top, rgba(26,18,8,0.7), transparent)', pointerEvents: 'none', zIndex: 3 }} />
+        <div style={{ position: 'absolute', bottom: '1rem', left: '1rem', fontFamily: 'var(--font-mono)', fontSize: 9, color: '#e8d4b8', letterSpacing: '0.1em', textTransform: 'uppercase', zIndex: 4 }}>
+          Field Investigation · Subsurface Characterization
+        </div>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+        {[1, 2].map((offset) => (
+          <div key={offset} style={{ position: 'relative', height: isMobile ? 120 : 140, overflow: 'hidden' }}>
+            <AnimatePresence initial={false}>
+              <motion.div
+                key={`btm-${offset}-${idx}`}
+                variants={slideIn}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                style={{ position: 'absolute', inset: 0 }}
+              >
+                <Image
+                  src={GALLERY_IMAGES[(idx + offset) % total]}
+                  alt="Field work"
+                  fill
+                  sizes="25vw"
+                  style={{ objectFit: 'cover' }}
+                />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        ))}
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        {[
+          { label: 'Mission', text: 'Provide accurate, reliable, and technically defensible geotechnical and materials testing services — enabling clients to manage geotechnical risks and achieve reliable construction outcomes.' },
+          { label: 'Vision', text: 'Become a leading Geotechnical Engineering and Materials Testing company worldwide, recognized for technical excellence, innovation, and practical solutions for the built environment.' },
+        ].map((item) => (
+          <div key={item.label} style={{ backgroundColor: '#1a1208', padding: '1.5rem' }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: '#c4872a', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>{item.label}</div>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#d4b08a', lineHeight: 1.7, margin: 0 }}>{item.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 // ─── About ────────────────────────────────────────────────────────────────────
 function AboutSection() {
   const w = useWindowWidth()
@@ -558,43 +656,8 @@ function AboutSection() {
             </blockquote>
           </div>
 
-          {/* Right */}
-          <div>
-            <div style={{ position: 'relative', marginBottom: '1.5rem' }}>
-              <div style={{ position: 'relative', width: '100%', height: isMobile ? 220 : 300 }}>
-                <Image
-                  src="/images/trial-pit.png"
-                  alt="Geotechnical field investigation — measuring excavation depth on site"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  style={{ objectFit: 'cover' }}
-                />
-              </div>
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '40%', background: 'linear-gradient(to top, rgba(26,18,8,0.7), transparent)', pointerEvents: 'none' }} />
-              <div style={{ position: 'absolute', bottom: '1rem', left: '1rem', fontFamily: 'var(--font-mono)', fontSize: 9, color: '#e8d4b8', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                Field Investigation · Subsurface Characterization
-              </div>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-              <div style={{ position: 'relative', height: isMobile ? 120 : 140 }}>
-                <Image src="/images/core-samples.png" alt="Borehole core samples logged in the field" fill sizes="25vw" style={{ objectFit: 'cover' }} />
-              </div>
-              <div style={{ position: 'relative', height: isMobile ? 120 : 140 }}>
-                <Image src="/images/field-auger.png" alt="Manual auger sampling in the field" fill sizes="25vw" style={{ objectFit: 'cover' }} />
-              </div>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              {[
-                { label: 'Mission', text: 'Provide accurate, reliable, and technically defensible geotechnical and materials testing services — enabling clients to manage geotechnical risks and achieve reliable construction outcomes.' },
-                { label: 'Vision', text: 'Become a leading Geotechnical Engineering and Materials Testing company worldwide, recognized for technical excellence, innovation, and practical solutions for the built environment.' },
-              ].map((item) => (
-                <div key={item.label} style={{ backgroundColor: '#1a1208', padding: '1.5rem' }}>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: '#c4872a', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>{item.label}</div>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#d4b08a', lineHeight: 1.7, margin: 0 }}>{item.text}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* Right — sliding gallery */}
+          <AboutGallery isMobile={isMobile} />
         </div>
       </div>
     </section>
@@ -886,6 +949,7 @@ function TeamSection() {
   const w = useWindowWidth()
   const isMobile = w < 640
   const isTablet = w < 960
+  const [contactOpen, setContactOpen] = useState<string | null>(null)
 
   const members: {
     name: string
@@ -939,11 +1003,137 @@ function TeamSection() {
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: '#c4872a', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '0.4rem' }}>{member.credential}</div>
                 <h3 style={{ fontFamily: 'var(--font-display)', fontSize: isMobile ? 19 : 21, color: '#1a1208', margin: '0 0 0.2rem', lineHeight: 1.2 }}>{member.name}</h3>
                 <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#9a6e42', marginBottom: '0.85rem', fontWeight: 500 }}>{member.role}</div>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#5c4020', lineHeight: 1.75, margin: 0 }}>{member.bio}</p>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#5c4020', lineHeight: 1.75, margin: '0 0 1rem' }}>{member.bio}</p>
+                {member.name !== 'MSc. Niragire Rosine' && <button
+                  type="button"
+                  onClick={() => setContactOpen(member.name)}
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 11,
+                    fontWeight: 600,
+                    color: '#1a1208',
+                    backgroundColor: '#c4872a',
+                    border: 'none',
+                    padding: '9px 20px',
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s',
+                  }}
+                  onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = '#e8b554')}
+                  onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = '#c4872a')}
+                >
+                  Contact
+                </button>}
               </div>
             </div>
           ))}
         </div>
+
+        {contactOpen && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            onMouseDown={(e) => { if (e.currentTarget === e.target) setContactOpen(null) }}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              backgroundColor: 'rgba(26,18,8,0.62)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '1.25rem',
+              zIndex: 1000,
+            }}
+          >
+            <div
+              onMouseDown={(e) => e.stopPropagation()}
+              style={{
+                width: '100%',
+                maxWidth: 420,
+                backgroundColor: '#faf5ec',
+                border: '1px solid #e8d4b8',
+                borderRadius: 14,
+                padding: isMobile ? '1.5rem' : '2rem',
+                boxShadow: '0 18px 60px rgba(0,0,0,0.25)',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
+                <div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: '#c4872a', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 8 }}>Get in touch</div>
+                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: isMobile ? 18 : 20, color: '#1a1208', lineHeight: 1.2, margin: 0 }}>{contactOpen}</h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setContactOpen(null)}
+                  aria-label="Close"
+                  style={{ border: '1px solid rgba(196,135,42,0.35)', backgroundColor: 'transparent', width: 34, height: 34, borderRadius: 10, cursor: 'pointer', fontSize: 18, color: '#1a1208', lineHeight: 1 }}
+                >
+                  ×
+                </button>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <a
+                  href="tel:+250788424508"
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '0.75rem',
+                    padding: '12px 16px', backgroundColor: '#1a1208', borderRadius: 10,
+                    textDecoration: 'none', transition: 'opacity 0.15s',
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = '0.88' }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = '1' }}
+                >
+                  <span style={{ fontSize: 18 }}>📞</span>
+                  <div>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: '#c4872a', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 2 }}>Phone</div>
+                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#e8d4b8', fontWeight: 500 }}>+250 788 424 508</div>
+                  </div>
+                </a>
+
+                <a
+                  href={`https://wa.me/${WHATSAPP_PHONE_DIGITS}?text=${encodeURIComponent(`Hello! I would like to get in touch with ${contactOpen}. Thank you.`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '0.75rem',
+                    padding: '12px 16px', backgroundColor: '#25D366', borderRadius: 10,
+                    textDecoration: 'none', transition: 'filter 0.15s',
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.filter = 'brightness(0.93)' }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.filter = 'none' }}
+                >
+                  <span style={{ display: 'inline-flex', width: 20, height: 20, color: '#fff' }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" fill="currentColor">
+                      <path d="M19.1 4.9A10 10 0 0 0 3 17.8L2 22l4.3-1.1A10 10 0 0 0 22 12a10 10 0 0 0-2.9-7.1Zm-7.1 15.3c-1.5 0-2.9-.4-4.1-1.2l-.3-.2-2 .5.5-2-.2-.3c-.8-1.2-1.2-2.6-1.2-4.1 0-4.5 3.7-8.2 8.2-8.2s8.2 3.7 8.2 8.2-3.7 8.3-8.1 8.3Zm8-5.9c-.3-.1-1.8-.9-2.1-1s-.5-.1-.7.1-.8 1-1 1.1c-.2.1-.4.1-.6 0-1-.5-1.8-1.1-2.4-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.4.1-.1.1-.3.1-.5s0-.4-.1-.5-.7-1.7-.9-1.8c-.2-.2-.4-.2-.6-.2h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.1 1.6 2.5 3.9 3.4 2.3.9 2.3.6 2.7.6s1.1-.4 1.3-.8c.2-.4.2-.8.1-.9-.1-.2-.2-.3-.5-.4Z" />
+                    </svg>
+                  </span>
+                  <div>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: 'rgba(255,255,255,0.7)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 2 }}>WhatsApp</div>
+                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#fff', fontWeight: 500 }}>+250 788 424 508</div>
+                  </div>
+                </a>
+
+                <a
+                  href="mailto:geosurveyltd3@gmail.com"
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '0.75rem',
+                    padding: '12px 16px', backgroundColor: '#2c1f0e', borderRadius: 10,
+                    textDecoration: 'none', transition: 'opacity 0.15s',
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = '0.88' }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = '1' }}
+                >
+                  <span style={{ fontSize: 18 }}>✉️</span>
+                  <div>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: '#c4872a', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 2 }}>Email</div>
+                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#e8d4b8', fontWeight: 500 }}>geosurveyltd3@gmail.com</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Quality note */}
         <div style={{ marginTop: '2rem', backgroundColor: '#2c1f0e', padding: isMobile ? '1.5rem' : '2rem 2.5rem', display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
@@ -1011,6 +1201,20 @@ function ContactSection() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
+    const msg = [
+      `Hello, my name is ${form.name}.`,
+      ``,
+      `I am interested in requesting a quotation or consultation${form.service ? ` for ${form.service}` : ''}.`,
+      ``,
+      form.message,
+      ``,
+      `You can reach me at`,
+      `  ${form.email}`,
+      form.phone ? `  ${form.phone}` : '',
+      ``,
+      `Looking forward to hearing from you. Thank you.`,
+    ].filter(Boolean).join('\n')
+    window.open(`https://wa.me/${WHATSAPP_PHONE_DIGITS}?text=${encodeURIComponent(msg)}`, '_blank')
     setSent(true)
   }
 
