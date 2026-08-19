@@ -81,6 +81,11 @@ const SERVICES = [
   },
 ]
 
+const WHATSAPP_PHONE = '+250 788 424 508'
+const WHATSAPP_PHONE_DIGITS = WHATSAPP_PHONE.replace(/\D/g, '')
+
+type Service = (typeof SERVICES)[number]
+
 const SECTORS = [
   { label: 'Residential & Commercial Buildings', icon: '🏘' },
   { label: 'Roads & Bridges', icon: '🌉' },
@@ -548,7 +553,7 @@ function AboutSection() {
             </p>
             <blockquote style={{ margin: 0, padding: '1.25rem 1.5rem', borderLeft: '3px solid #c4872a', backgroundColor: '#f4ead8' }}>
               <p style={{ fontFamily: 'var(--font-display)', fontSize: 17, color: '#3d2c14', lineHeight: 1.55, fontStyle: 'italic', margin: 0 }}>
-                "Soil and rock conditions can vary significantly over short distances — inadequate understanding of subsurface conditions can lead to inappropriate foundation selection, excessive settlement, instability, and cost overruns."
+                &ldquo;Soil and rock conditions can vary significantly over short distances — inadequate understanding of subsurface conditions can lead to inappropriate foundation selection, excessive settlement, instability, and cost overruns.&rdquo;
               </p>
             </blockquote>
           </div>
@@ -599,9 +604,27 @@ function AboutSection() {
 // ─── Services ─────────────────────────────────────────────────────────────────
 function ServicesSection() {
   const [hovered, setHovered] = useState<number | null>(null)
+  const [selectedService, setSelectedService] = useState<Service | null>(null)
   const w = useWindowWidth()
   const cols = w < 640 ? 1 : w < 1024 ? 2 : 4
   const isMobile = w < 640
+
+  const whatsappMessage =
+    selectedService &&
+    `Hello!\n\nI would like to request the following service:\n\n${selectedService.title}\n\nDescription:\n${selectedService.summary}\n\nThank you.`
+
+  const whatsappUrl = selectedService ? `https://wa.me/${WHATSAPP_PHONE_DIGITS}?text=${encodeURIComponent(whatsappMessage ?? '')}` : ''
+
+  useEffect(() => {
+    if (!selectedService) return
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedService(null)
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [selectedService])
 
   return (
     <section id="services" style={{ backgroundColor: '#f4ead8', padding: isMobile ? '4rem 0' : '6rem 0' }}>
@@ -619,20 +642,28 @@ function ServicesSection() {
         <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: '0', border: '1px solid #e8d4b8' }}>
           {SERVICES.map((s, i) => {
             const isLastInRow = (i + 1) % cols === 0
-            const isInFirstRow = i < cols
             const isInLastRow = i >= SERVICES.length - cols
             return (
               <div
                 key={s.number}
+                role="button"
+                tabIndex={0}
                 onMouseEnter={() => setHovered(i)}
                 onMouseLeave={() => setHovered(null)}
+                onClick={() => setSelectedService(s)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    setSelectedService(s)
+                  }
+                }}
                 style={{
                   padding: isMobile ? '1.5rem' : '2rem',
                   borderRight: !isLastInRow ? '1px solid #e8d4b8' : 'none',
                   borderBottom: !isInLastRow ? '1px solid #e8d4b8' : 'none',
                   backgroundColor: hovered === i ? '#1a1208' : 'transparent',
                   transition: 'background-color 0.25s',
-                  cursor: 'default',
+                  cursor: 'pointer',
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.1rem' }}>
@@ -646,6 +677,120 @@ function ServicesSection() {
           })}
         </div>
       </div>
+
+      {selectedService && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          onMouseDown={(e) => {
+            if (e.currentTarget === e.target) setSelectedService(null)
+          }}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(26,18,8,0.62)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1.25rem',
+            zIndex: 1000,
+          }}
+        >
+          <div
+            onMouseDown={(e) => e.stopPropagation()}
+            style={{
+              width: '100%',
+              maxWidth: 560,
+              backgroundColor: '#faf5ec',
+              border: '1px solid #e8d4b8',
+              borderRadius: 14,
+              padding: isMobile ? '1.25rem' : '1.5rem',
+              boxShadow: '0 18px 60px rgba(0,0,0,0.25)',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem', marginBottom: '1rem' }}>
+              <div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: '#c4872a', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10 }}>
+                  Contact us
+                </div>
+                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: isMobile ? 20 : 22, color: '#1a1208', lineHeight: 1.2, margin: 0 }}>
+                  {selectedService.title}
+                </h3>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setSelectedService(null)}
+                aria-label="Close popup"
+                style={{
+                  border: '1px solid rgba(196,135,42,0.35)',
+                  backgroundColor: 'transparent',
+                  width: 34,
+                  height: 34,
+                  borderRadius: 10,
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 18,
+                  color: '#1a1208',
+                  lineHeight: 1,
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#7a5530', lineHeight: 1.8, margin: '0 0 1.25rem' }}>
+              Click the button below to WhatsApp us and request this service.
+            </p>
+
+            <div style={{ marginBottom: '1.25rem', padding: '0.95rem 1rem', border: '1px solid rgba(196,135,42,0.25)', backgroundColor: 'rgba(196,135,42,0.06)' }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: '#c4872a', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10 }}>
+                Service details
+              </div>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#2c1f0e', lineHeight: 1.75, margin: 0 }}>
+                {selectedService.summary}
+              </p>
+            </div>
+
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.7rem',
+                width: '100%',
+                fontFamily: 'var(--font-body)',
+                fontSize: 13,
+                fontWeight: 700,
+                color: '#ffffff',
+                backgroundColor: '#25D366',
+                border: 'none',
+                padding: isMobile ? '12px 16px' : '13px 18px',
+                textDecoration: 'none',
+                borderRadius: 12,
+                cursor: 'pointer',
+                transition: 'filter 0.15s',
+              }}
+              onMouseEnter={(e) => {
+                ;(e.currentTarget as HTMLElement).style.filter = 'brightness(0.95)'
+              }}
+              onMouseLeave={(e) => {
+                ;(e.currentTarget as HTMLElement).style.filter = 'none'
+              }}
+            >
+              <span style={{ display: 'inline-flex', width: 20, height: 20, color: '#ffffff' }} aria-hidden>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" fill="currentColor">
+                  <path d="M19.1 4.9A10 10 0 0 0 3 17.8L2 22l4.3-1.1A10 10 0 0 0 22 12a10 10 0 0 0-2.9-7.1Zm-7.1 15.3c-1.5 0-2.9-.4-4.1-1.2l-.3-.2-2 .5.5-2-.2-.3c-.8-1.2-1.2-2.6-1.2-4.1 0-4.5 3.7-8.2 8.2-8.2s8.2 3.7 8.2 8.2-3.7 8.3-8.1 8.3Zm8-5.9c-.3-.1-1.8-.9-2.1-1s-.5-.1-.7.1-.8 1-1 1.1c-.2.1-.4.1-.6 0-1-.5-1.8-1.1-2.4-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.4.1-.1.1-.3.1-.5s0-.4-.1-.5-.7-1.7-.9-1.8c-.2-.2-.4-.2-.6-.2h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.1 1.6 2.5 3.9 3.4 2.3.9 2.3.6 2.7.6s1.1-.4 1.3-.8c.2-.4.2-.8.1-.9-.1-.2-.2-.3-.5-.4Z" />
+                </svg>
+              </span>
+              WhatsApp
+            </a>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
@@ -828,7 +973,7 @@ function CtaSection() {
       <div style={{ position: 'relative', maxWidth: 720, margin: '0 auto' }}>
         <SectionLabel>Your Project. Our Engineering Expertise.</SectionLabel>
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: isMobile ? 'clamp(2rem, 8vw, 2.8rem)' : 'clamp(2.5rem, 5vw, 4rem)', color: '#faf5ec', lineHeight: 1.08, margin: '0 0 1.25rem' }}>
-          Don't Build on Assumptions.
+          Don&apos;t Build on Assumptions.
           <br />
           <em style={{ color: '#c4872a' }}>Build on Reliable Ground Information.</em>
         </h2>

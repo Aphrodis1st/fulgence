@@ -25,7 +25,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GEOSURVEY ENGINEERING LTD | Geotechnical Engineering & Materials Testing",
+  title: "GEOTECHNICAL ENGINEERING & LABORATORY SOIL AND MATERIALS TESTING",
   description:
     "Professional geotechnical investigation and materials testing services enabling clients to make informed engineering decisions for construction projects across Rwanda and beyond.",
   robots: {
