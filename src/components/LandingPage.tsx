@@ -30,6 +30,7 @@ const SERVICES = [
     summary:
       'Trial pits, borehole drilling, soil and rock sampling, DCP testing, SPT, groundwater observations, and soil profiling to establish subsurface profiles.',
     icon: '⛏',
+    image: '/images/gallery/gallery-07.png',
   },
   {
     number: '02',
@@ -37,6 +38,7 @@ const SERVICES = [
     summary:
       'Particle-size distribution, Atterberg limits, natural moisture content, CBR, direct shear, permeability, compaction, and classification tests.',
     icon: '🔬',
+    image: '/images/gallery/gallery-04.png',
   },
   {
     number: '03',
@@ -44,6 +46,7 @@ const SERVICES = [
     summary:
       'Aggregate characterization, field density, concrete testing, rebound hammer assessment, compaction verification for earthworks, roads, and buildings.',
     icon: '🏗',
+    image: '/images/gallery/gallery-03.png',
   },
   {
     number: '04',
@@ -51,6 +54,7 @@ const SERVICES = [
     summary:
       'DCP, SPT, field density and compaction assessment, groundwater observations, rebound hammer, and other project-specific in-situ investigations.',
     icon: '📐',
+    image: '/images/gallery/gallery-05.png',
   },
   {
     number: '05',
@@ -58,6 +62,7 @@ const SERVICES = [
     summary:
       'Foundation type selection, allowable bearing pressure, settlement analysis, subgrade assessment, ground improvement, and construction-stage recommendations.',
     icon: '🏛',
+    image: '/images/gallery/gallery-06.png',
   },
   {
     number: '06',
@@ -65,6 +70,7 @@ const SERVICES = [
     summary:
       'Subgrade characterization, DCP investigations, CBR testing, soil classification, compaction assessment, and earthworks recommendations for road corridors.',
     icon: '🛣',
+    image: '/images/gallery/gallery-01.png',
   },
   {
     number: '07',
@@ -72,6 +78,7 @@ const SERVICES = [
     summary:
       'Slope condition assessment, soil stratigraphy, groundwater and drainage evaluation, erosion susceptibility, and embankment stability recommendations.',
     icon: '⛰',
+    image: '/images/gallery/gallery-10.png',
   },
   {
     number: '08',
@@ -79,6 +86,7 @@ const SERVICES = [
     summary:
       'Site assessments, building condition evaluations, technical inspections, construction quality monitoring, and engineering reports throughout the project lifecycle.',
     icon: '🏢',
+    image: '/images/gallery/gallery-08.png',
   },
 ]
 
@@ -551,6 +559,13 @@ function AboutGallery({ isMobile }: { isMobile: boolean }) {
   const total = GALLERY_IMAGES.length
 
   useEffect(() => {
+    GALLERY_IMAGES.forEach((src) => {
+      const img = new window.Image()
+      img.src = src
+    })
+  }, [])
+
+  useEffect(() => {
     const timer = setInterval(() => setIdx((prev) => (prev + 1) % total), 5000)
     return () => clearInterval(timer)
   }, [total])
@@ -578,6 +593,8 @@ function AboutGallery({ isMobile }: { isMobile: boolean }) {
                 alt="Field work"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
+                quality={75}
+                loading="eager"
                 style={{ objectFit: 'cover' }}
               />
             </motion.div>
@@ -605,6 +622,8 @@ function AboutGallery({ isMobile }: { isMobile: boolean }) {
                   alt="Field work"
                   fill
                   sizes="25vw"
+                  quality={70}
+                  loading="eager"
                   style={{ objectFit: 'cover' }}
                 />
               </motion.div>
@@ -671,12 +690,6 @@ function ServicesSection() {
   const w = useWindowWidth()
   const cols = w < 640 ? 1 : w < 1024 ? 2 : 4
   const isMobile = w < 640
-
-  const whatsappMessage =
-    selectedService &&
-    `Hello!\n\nI would like to request the following service:\n\n${selectedService.title}\n\nDescription:\n${selectedService.summary}\n\nThank you.`
-
-  const whatsappUrl = selectedService ? `https://wa.me/${WHATSAPP_PHONE_DIGITS}?text=${encodeURIComponent(whatsappMessage ?? '')}` : ''
 
   useEffect(() => {
     if (!selectedService) return
@@ -767,90 +780,80 @@ function ServicesSection() {
               backgroundColor: '#faf5ec',
               border: '1px solid #e8d4b8',
               borderRadius: 14,
-              padding: isMobile ? '1.25rem' : '1.5rem',
+              overflow: 'hidden',
               boxShadow: '0 18px 60px rgba(0,0,0,0.25)',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem', marginBottom: '1rem' }}>
-              <div>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: '#c4872a', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10 }}>
-                  Contact us
-                </div>
-                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: isMobile ? 20 : 22, color: '#1a1208', lineHeight: 1.2, margin: 0 }}>
-                  {selectedService.title}
-                </h3>
-              </div>
-
+            <div style={{ position: 'relative', width: '100%', height: isMobile ? 180 : 240 }}>
+              <Image
+                src={selectedService.image}
+                alt={selectedService.title}
+                fill
+                sizes="560px"
+                quality={75}
+                priority
+                style={{ objectFit: 'cover' }}
+              />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(26,18,8,0.7) 0%, transparent 50%)', pointerEvents: 'none' }} />
               <button
                 type="button"
                 onClick={() => setSelectedService(null)}
                 aria-label="Close popup"
                 style={{
-                  border: '1px solid rgba(196,135,42,0.35)',
-                  backgroundColor: 'transparent',
+                  position: 'absolute',
+                  top: 12,
+                  right: 12,
+                  border: 'none',
+                  backgroundColor: 'rgba(26,18,8,0.6)',
+                  backdropFilter: 'blur(6px)',
                   width: 34,
                   height: 34,
                   borderRadius: 10,
                   cursor: 'pointer',
-                  fontFamily: 'var(--font-body)',
                   fontSize: 18,
-                  color: '#1a1208',
+                  color: '#faf5ec',
                   lineHeight: 1,
+                  zIndex: 2,
                 }}
               >
                 ×
               </button>
+              <div style={{ position: 'absolute', bottom: 16, left: 20, zIndex: 2 }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: '#c4872a', letterSpacing: '0.12em', marginBottom: 6 }}>{selectedService.number}</div>
+                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: isMobile ? 20 : 24, color: '#faf5ec', lineHeight: 1.2, margin: 0 }}>
+                  {selectedService.title}
+                </h3>
+              </div>
             </div>
 
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#7a5530', lineHeight: 1.8, margin: '0 0 1.25rem' }}>
-              Click the button below to WhatsApp us and request this service.
-            </p>
-
-            <div style={{ marginBottom: '1.25rem', padding: '0.95rem 1rem', border: '1px solid rgba(196,135,42,0.25)', backgroundColor: 'rgba(196,135,42,0.06)' }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: '#c4872a', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10 }}>
-                Service details
-              </div>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#2c1f0e', lineHeight: 1.75, margin: 0 }}>
+            <div style={{ padding: isMobile ? '1.25rem' : '1.5rem' }}>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#5c4020', lineHeight: 1.8, margin: '0 0 1.25rem' }}>
                 {selectedService.summary}
               </p>
+              <a
+                href="#contact"
+                onClick={() => setSelectedService(null)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: '#1a1208',
+                  backgroundColor: '#c4872a',
+                  padding: '11px 24px',
+                  textDecoration: 'none',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  transition: 'background-color 0.2s',
+                }}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = '#e8b554')}
+                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = '#c4872a')}
+              >
+                Request a Quotation <span style={{ fontSize: 14 }}>→</span>
+              </a>
             </div>
-
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.7rem',
-                width: '100%',
-                fontFamily: 'var(--font-body)',
-                fontSize: 13,
-                fontWeight: 700,
-                color: '#ffffff',
-                backgroundColor: '#25D366',
-                border: 'none',
-                padding: isMobile ? '12px 16px' : '13px 18px',
-                textDecoration: 'none',
-                borderRadius: 12,
-                cursor: 'pointer',
-                transition: 'filter 0.15s',
-              }}
-              onMouseEnter={(e) => {
-                ;(e.currentTarget as HTMLElement).style.filter = 'brightness(0.95)'
-              }}
-              onMouseLeave={(e) => {
-                ;(e.currentTarget as HTMLElement).style.filter = 'none'
-              }}
-            >
-              <span style={{ display: 'inline-flex', width: 20, height: 20, color: '#ffffff' }} aria-hidden>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" fill="currentColor">
-                  <path d="M19.1 4.9A10 10 0 0 0 3 17.8L2 22l4.3-1.1A10 10 0 0 0 22 12a10 10 0 0 0-2.9-7.1Zm-7.1 15.3c-1.5 0-2.9-.4-4.1-1.2l-.3-.2-2 .5.5-2-.2-.3c-.8-1.2-1.2-2.6-1.2-4.1 0-4.5 3.7-8.2 8.2-8.2s8.2 3.7 8.2 8.2-3.7 8.3-8.1 8.3Zm8-5.9c-.3-.1-1.8-.9-2.1-1s-.5-.1-.7.1-.8 1-1 1.1c-.2.1-.4.1-.6 0-1-.5-1.8-1.1-2.4-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.4.1-.1.1-.3.1-.5s0-.4-.1-.5-.7-1.7-.9-1.8c-.2-.2-.4-.2-.6-.2h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.1 1.6 2.5 3.9 3.4 2.3.9 2.3.6 2.7.6s1.1-.4 1.3-.8c.2-.4.2-.8.1-.9-.1-.2-.2-.3-.5-.4Z" />
-                </svg>
-              </span>
-              WhatsApp
-            </a>
           </div>
         </div>
       )}
@@ -1411,6 +1414,48 @@ function Footer() {
 }
 
 // ─── App ──────────────────────────────────────────────────────────────────────
+function FloatingWhatsApp() {
+  return (
+    <a
+      href={`https://wa.me/${WHATSAPP_PHONE_DIGITS}?text=${encodeURIComponent('Hello! I would like to learn more about your geotechnical engineering services. Thank you.')}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Chat on WhatsApp"
+      style={{
+        position: 'fixed',
+        bottom: 24,
+        right: 24,
+        width: 56,
+        height: 56,
+        borderRadius: '50%',
+        backgroundColor: '#25D366',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
+        zIndex: 900,
+        transition: 'transform 0.2s, box-shadow 0.2s',
+        cursor: 'pointer',
+        textDecoration: 'none',
+      }}
+      onMouseEnter={(e) => {
+        const el = e.currentTarget as HTMLElement
+        el.style.transform = 'scale(1.08)'
+        el.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3)'
+      }}
+      onMouseLeave={(e) => {
+        const el = e.currentTarget as HTMLElement
+        el.style.transform = 'scale(1)'
+        el.style.boxShadow = '0 4px 14px rgba(0,0,0,0.25)'
+      }}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="28" height="28" fill="#fff">
+        <path d="M19.1 4.9A10 10 0 0 0 3 17.8L2 22l4.3-1.1A10 10 0 0 0 22 12a10 10 0 0 0-2.9-7.1Zm-7.1 15.3c-1.5 0-2.9-.4-4.1-1.2l-.3-.2-2 .5.5-2-.2-.3c-.8-1.2-1.2-2.6-1.2-4.1 0-4.5 3.7-8.2 8.2-8.2s8.2 3.7 8.2 8.2-3.7 8.3-8.1 8.3Zm8-5.9c-.3-.1-1.8-.9-2.1-1s-.5-.1-.7.1-.8 1-1 1.1c-.2.1-.4.1-.6 0-1-.5-1.8-1.1-2.4-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.4.1-.1.1-.3.1-.5s0-.4-.1-.5-.7-1.7-.9-1.8c-.2-.2-.4-.2-.6-.2h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.1 1.6 2.5 3.9 3.4 2.3.9 2.3.6 2.7.6s1.1-.4 1.3-.8c.2-.4.2-.8.1-.9-.1-.2-.2-.3-.5-.4Z" />
+      </svg>
+    </a>
+  )
+}
+
 export function LandingPage() {
   return (
     <div style={{ fontFamily: 'var(--font-body)', overflowX: 'hidden', maxWidth: '100%' }}>
@@ -1427,6 +1472,7 @@ export function LandingPage() {
         <ContactSection />
       </main>
       <Footer />
+      <FloatingWhatsApp />
     </div>
   )
 }
