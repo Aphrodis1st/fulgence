@@ -1,4 +1,4 @@
-/** Set NEXT_PUBLIC_SITE_URL in production (e.g. https://www.example.com) */
+/** Set NEXT_PUBLIC_SITE_URL in production if different from the canonical domain. */
 export const SITE_URL = (() => {
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
@@ -6,7 +6,7 @@ export const SITE_URL = (() => {
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL.replace(/\/$/, "")}`;
   }
-  return "http://localhost:3000";
+  return "https://www.geosurveyengineeringltd.com";
 })();
 
 export const SITE_NAME = "GEOSURVEY ENGINEERING Ltd";
