@@ -19,6 +19,7 @@ const NAV_LINKS = [
   { label: 'About', href: '#about' },
   { label: 'Services', href: '#services' },
   { label: 'Sectors', href: '#sectors' },
+  { label: 'Projects', href: '#projects' },
   { label: 'Team', href: '#team' },
   { label: 'Contact', href: '#contact' },
 ]
@@ -124,6 +125,89 @@ const REASONS = [
     body: 'Our procedures can be undertaken in accordance with applicable ASTM, ISO/RS, BS, or project-specified testing requirements.',
   },
 ]
+
+const PROJECTS = [
+  {
+    period: '2026',
+    client: 'SEGEBU Ltd',
+    country: 'Rwanda',
+    name: 'Construction of Coptic Orthodox Church',
+  },
+  {
+    period: '2026',
+    client: 'GEO-DESIGN Ltd',
+    country: 'Rwanda',
+    name: 'Geophysical surveys and optimal borehole locations for sustainable industrial water supply in the BRALIRWA project area, with detailed geotechnical investigations for apartment construction',
+  },
+  {
+    period: '2025',
+    client: 'ASTRICK Ltd',
+    country: 'Rwanda',
+    name: 'Rehabilitation & upgrading of Kigali–Muhanga Road Project',
+  },
+  {
+    period: '2025',
+    client: 'ZV Consulting Ltd',
+    country: 'Rwanda',
+    name: 'KISUP — Geotechnical investigations, design & supervision of socio-economic facilities and public spaces in Rwezamenyo/Nyakabanda and Kagugu',
+  },
+  {
+    period: '2025',
+    client: 'Ideal Green Engineering',
+    country: 'Rwanda',
+    name: 'Geotechnical investigations for Busogwe Dam',
+  },
+  {
+    period: '2025',
+    client: 'ZV Consulting Ltd',
+    country: 'Rwanda',
+    name: 'Geotechnical investigations for weir bridge at Mareba and main pumping station at Akanyaru',
+  },
+  {
+    period: '2025',
+    client: 'ZV Consulting Ltd',
+    country: 'Rwanda',
+    name: 'Prefeasibility and feasibility study for irrigation development works of Mwogo Marshland',
+  },
+  {
+    period: '2024–2025',
+    client: 'Dynasty Construction Ltd',
+    country: 'Rwanda',
+    name: 'Rwanda Heart Center Construction',
+  },
+  {
+    period: '2023',
+    client: 'GEO Consult Ltd',
+    country: 'Rwanda',
+    name: 'Green City Kigali Project',
+  },
+  {
+    period: '2023',
+    client: 'GEO Consult Ltd',
+    country: 'Rwanda',
+    name: 'Nduba Dumpsite Biogas for Waste Valorisation Project',
+  },
+  {
+    period: '2023',
+    client: 'GEO Consult Ltd',
+    country: 'Rwanda',
+    name: 'Kigai Wetlands',
+  },
+  {
+    period: '2022–2023',
+    client: 'GEO Consult Ltd',
+    country: 'Rwanda',
+    name: 'Gisagara Irrigation Project',
+  },
+  {
+    period: '2022–2023',
+    client: 'GEO Consult Ltd',
+    country: 'Rwanda',
+    name: 'Feasibility study on irrigation canal for Muvumba Multipurpose Dam',
+  },
+] as const
+
+const PROJECTS_PREVIEW = 6
 
 // ─── Reusable label ───────────────────────────────────────────────────────────
 function SectionLabel({ children }: { children: ReactNode }) {
@@ -918,6 +1002,205 @@ function SectorsSection() {
   )
 }
 
+// ─── Project Experience ───────────────────────────────────────────────────────
+function ProjectsSection() {
+  const w = useWindowWidth()
+  const isMobile = w < 768
+  const [expanded, setExpanded] = useState(false)
+  const visible = expanded ? PROJECTS : PROJECTS.slice(0, PROJECTS_PREVIEW)
+  const hasMore = PROJECTS.length > PROJECTS_PREVIEW
+
+  return (
+    <section id="projects" style={{ backgroundColor: '#faf5ec', padding: isMobile ? '4rem 0' : '6rem 0' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: isMobile ? '0 1.25rem' : '0 2rem' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : 'minmax(0, 1fr) minmax(0, 1.4fr)',
+            gap: isMobile ? '1.75rem' : '4rem',
+            alignItems: 'end',
+            marginBottom: isMobile ? '2.5rem' : '3.5rem',
+          }}
+        >
+          <div>
+            <SectionLabel>Project Experience</SectionLabel>
+            <h2
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(1.9rem, 4vw, 3rem)',
+                color: '#1a1208',
+                lineHeight: 1.1,
+                margin: 0,
+              }}
+            >
+              Selected Assignments Across Rwanda
+            </h2>
+          </div>
+          <p
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: 15,
+              color: '#5c4020',
+              lineHeight: 1.8,
+              margin: 0,
+              maxWidth: 560,
+            }}
+          >
+            Our professional experience includes geotechnical investigations and engineering assignments associated with
+            buildings, road and bridge infrastructure, pumping stations, canals, marshland developments, dams, fishponds,
+            agricultural infrastructure, and other civil engineering projects.
+          </p>
+        </div>
+
+        {!isMobile && (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '7.5rem 1fr 5.5rem minmax(0, 2.2fr)',
+              gap: '1rem',
+              padding: '0 0 0.85rem',
+              borderBottom: '1px solid #e8d4b8',
+              marginBottom: '0.25rem',
+            }}
+          >
+            {['Period', 'Client', 'Country', 'Project'].map((label) => (
+              <div
+                key={label}
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 10,
+                  color: '#c4872a',
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {label}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div>
+          {visible.map((project, index) => (
+            <motion.div
+              key={`${project.period}-${project.client}-${project.name}`}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.35, delay: Math.min(index, 8) * 0.04 }}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: isMobile ? '1fr' : '7.5rem 1fr 5.5rem minmax(0, 2.2fr)',
+                gap: isMobile ? '0.45rem' : '1rem',
+                padding: isMobile ? '1.25rem 0' : '1.15rem 0',
+                borderBottom: '1px solid #e8d4b8',
+                alignItems: 'start',
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: isMobile ? 11 : 12,
+                  color: '#c4872a',
+                  letterSpacing: '0.06em',
+                  paddingTop: 2,
+                }}
+              >
+                {project.period}
+              </div>
+              <div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: isMobile ? 13 : 14,
+                    color: '#2c1f0e',
+                    fontWeight: 600,
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {project.client}
+                </div>
+                {isMobile && (
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: 10,
+                      color: '#b88d62',
+                      letterSpacing: '0.1em',
+                      textTransform: 'uppercase',
+                      marginTop: 4,
+                    }}
+                  >
+                    {project.country}
+                  </div>
+                )}
+              </div>
+              {!isMobile && (
+                <div
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 11,
+                    color: '#7a5530',
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    paddingTop: 3,
+                  }}
+                >
+                  {project.country}
+                </div>
+              )}
+              <div
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: isMobile ? 14 : 15,
+                  color: '#5c4020',
+                  lineHeight: 1.65,
+                }}
+              >
+                {project.name}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {hasMore && (
+          <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+            <button
+              type="button"
+              onClick={() => setExpanded((v) => !v)}
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: 12,
+                fontWeight: 600,
+                color: '#1a1208',
+                backgroundColor: 'transparent',
+                border: '1px solid #c4872a',
+                padding: '12px 28px',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+                transition: 'background-color 0.2s, color 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLElement
+                el.style.backgroundColor = '#c4872a'
+                el.style.color = '#1a1208'
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLElement
+                el.style.backgroundColor = 'transparent'
+                el.style.color = '#1a1208'
+              }}
+            >
+              {expanded ? 'Show fewer projects' : `View all ${PROJECTS.length} projects`}
+            </button>
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
+
 // ─── Why Us ───────────────────────────────────────────────────────────────────
 function WhyUsSection() {
   const w = useWindowWidth()
@@ -1499,6 +1782,7 @@ export function LandingPage() {
         <AboutSection />
         <ServicesSection />
         <SectorsSection />
+        <ProjectsSection />
         <WhyUsSection />
         <TeamSection />
         <CtaSection />
