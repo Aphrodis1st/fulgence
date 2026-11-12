@@ -1236,6 +1236,7 @@ function TeamSection() {
   const isMobile = w < 640
   const isTablet = w < 960
   const [contactOpen, setContactOpen] = useState<string | null>(null)
+  const [expandedBios, setExpandedBios] = useState<Record<string, boolean>>({})
 
   const members: {
     name: string
@@ -1243,6 +1244,9 @@ function TeamSection() {
     credential: string
     bio: string
     photo: string
+    phone: string
+    email: string
+    showContact?: boolean
   }[] = [
     {
       name: 'Eng. Fulgence Iradukunda',
@@ -1250,47 +1254,265 @@ function TeamSection() {
       credential: 'Certified Geotechnical Engineer',
       bio: 'Provides technical and strategic leadership for GEOSURVEY ENGINEERING LTD. Professional focus includes geotechnical investigation, subsurface characterization, field testing, laboratory interpretation, foundation assessment, earthworks, and engineering consultancy. Responsible for technical direction, project coordination, engineering quality, and client engagement.',
       photo: '/images/team-fulgence.png',
+      phone: '+250 788 424 508',
+      email: 'geosurveyltd3@gmail.com',
+      showContact: true,
     },
+    // {
+    //   name: 'MSc. Niragire Rosine',
+    //   role: 'Quality Manager',
+    //   credential: 'MSc. Quality Management',
+    //   bio: "Supports the company's quality-management activities, technical documentation, quality-control procedures, and continuous improvement of field and laboratory operations. Contributes to maintaining consistency, traceability, and reliability throughout the company's engineering and testing activities.",
+    //   photo: '/images/team-rosine.png',
+    //   phone: '+250 788 424 508',
+    //   email: 'geosurveyltd3@gmail.com',
+    // },
     {
-      name: 'MSc. Niragire Rosine',
-      role: 'Quality Manager',
-      credential: 'MSc. Quality Management',
-      bio: "Supports the company's quality-management activities, technical documentation, quality-control procedures, and continuous improvement of field and laboratory operations. Contributes to maintaining consistency, traceability, and reliability throughout the company's engineering and testing activities.",
-      photo: '/images/team-rosine.png',
+      name: 'Ms. IRADUKUNDA Naome',
+      role: 'Laboratory Manager and Marketing Officer',
+      credential: 'Laboratory & Business Development',
+      bio: [
+        'Laboratory Manager: Responsible for managing and supervising all geotechnical and construction materials laboratory operations. The role also involves equipment maintenance and verification, sample management, compliance with applicable ASTM, ISO and BS standards, reviewing test results, preparing laboratory reports and providing technical support for geotechnical investigations and foundation recommendations.',
+        "Marketing Officer: Responsible for promoting GEOSURVEY ENGINEERING LTD's geotechnical engineering, laboratory testing and building consultancy services, identifying potential clients and business opportunities, managing client relationships, preparing technical proposals and quotations, monitoring tenders and RFQs, managing the company's website and social media platforms, coordinating marketing activities and supporting business development to increase the company's visibility, client base and project opportunities.",
+      ].join('\n\n'),
+      photo: '/images/team-naome.jpg',
+      phone: '+250 789 054 282',
+      email: 'geosurveyltd3@gmail.com',
+      showContact: true,
     },
   ]
+
+  const activeMember = members.find((m) => m.name === contactOpen)
 
   return (
     <section id="team" style={{ backgroundColor: '#f4ead8', padding: isMobile ? '4rem 0' : '6rem 0' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: isMobile ? '0 1.25rem' : '0 2rem' }}>
-        <SectionLabel>Professional Team</SectionLabel>
-        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#1a1208', lineHeight: 1.1, margin: '0 0 3rem', maxWidth: 480 }}>
-          Quality & Professional Practice
-        </h2>
+        <div style={{ textAlign: 'center', marginBottom: isMobile ? '2.5rem' : '3.5rem' }}>
+          <SectionLabel>Professional Team</SectionLabel>
+          <h2
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(2rem, 4vw, 3rem)',
+              color: '#1a1208',
+              lineHeight: 1.1,
+              margin: '0 auto',
+              maxWidth: 520,
+            }}
+          >
+            Quality & Professional Practice
+          </h2>
+        </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: isTablet ? '1fr' : '1fr 1fr', gap: '1.5rem' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: isTablet ? '1fr' : `repeat(${Math.min(members.length, 2)}, minmax(0, 1fr))`,
+            gap: isMobile ? '1.25rem' : '1.75rem',
+            maxWidth: members.length === 1 ? 420 : 920,
+            margin: '0 auto',
+          }}
+        >
           {members.map((member) => (
-            <div
+            <article
               key={member.name}
               style={{
-                display: 'grid',
-                gridTemplateColumns: isMobile ? '1fr' : '120px 1fr',
-                gap: isMobile ? '1.25rem' : '1.75rem',
                 backgroundColor: '#faf5ec',
-                padding: isMobile ? '1.75rem' : '2.25rem',
+                borderRadius: 18,
+                padding: isMobile ? '2rem 1.5rem 1.75rem' : '2.5rem 2rem 2rem',
+                textAlign: 'center',
+                boxShadow: '0 10px 28px rgba(44, 31, 14, 0.08)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                height: '100%',
               }}
             >
-              <div style={{ display: 'flex', justifyContent: isMobile ? 'flex-start' : 'flex-start' }}>
-                <div style={{ width: isMobile ? 80 : 120, height: isMobile ? 80 : 120, overflow: 'hidden', backgroundColor: '#e8d4b8', flexShrink: 0, position: 'relative' }}>
-                  <Image src={member.photo} alt={member.name} fill sizes="120px" style={{ objectFit: 'cover', objectPosition: 'center top' }} />
-                </div>
+              <div
+                style={{
+                  width: isMobile ? 112 : 132,
+                  height: isMobile ? 112 : 132,
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                  backgroundColor: '#e8d4b8',
+                  position: 'relative',
+                  marginBottom: '1.25rem',
+                  border: '3px solid #fff',
+                  boxShadow: '0 0 0 1px #e8d4b8',
+                }}
+              >
+                <Image
+                  src={member.photo}
+                  alt={member.name}
+                  fill
+                  sizes="132px"
+                  style={{ objectFit: 'cover', objectPosition: 'center top' }}
+                />
               </div>
-              <div>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: '#c4872a', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '0.4rem' }}>{member.credential}</div>
-                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: isMobile ? 19 : 21, color: '#1a1208', margin: '0 0 0.2rem', lineHeight: 1.2 }}>{member.name}</h3>
-                <div style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#9a6e42', marginBottom: '0.85rem', fontWeight: 500 }}>{member.role}</div>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#5c4020', lineHeight: 1.75, margin: '0 0 1rem' }}>{member.bio}</p>
-                {member.name !== 'MSc. Niragire Rosine' && <button
+
+              <h3
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: isMobile ? 20 : 22,
+                  color: '#1a1208',
+                  margin: '0 0 0.45rem',
+                  lineHeight: 1.2,
+                }}
+              >
+                {member.name}
+              </h3>
+
+              <div
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 10,
+                  color: '#c4872a',
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  marginBottom: '0.35rem',
+                }}
+              >
+                {member.role}
+              </div>
+
+              <div
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 12,
+                  color: '#9a6e42',
+                  marginBottom: '1.15rem',
+                }}
+              >
+                {member.credential}
+              </div>
+
+              {(() => {
+                const isLongBio = member.bio.length > 420
+                const isExpanded = !!expandedBios[member.name]
+                const bioEase = [0.22, 1, 0.36, 1] as const
+                return (
+                  <div style={{ flex: 1, marginBottom: isLongBio ? '0.75rem' : '1.5rem', width: '100%', maxWidth: 360 }}>
+                    <div style={{ position: 'relative' }}>
+                      <motion.div
+                        initial={false}
+                        animate={{ height: !isLongBio || isExpanded ? 'auto' : 110 }}
+                        transition={{ duration: 0.45, ease: bioEase }}
+                        style={{ overflow: 'hidden' }}
+                      >
+                        <motion.div
+                          initial={false}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.35, ease: bioEase }}
+                        >
+                          {member.bio.split('\n\n').map((paragraph, index) => (
+                            <motion.p
+                              key={paragraph.slice(0, 40)}
+                              initial={false}
+                              animate={{
+                                opacity: !isLongBio || isExpanded || index === 0 ? 1 : 0.35,
+                              }}
+                              transition={{ duration: 0.35, ease: bioEase, delay: isExpanded ? index * 0.04 : 0 }}
+                              style={{
+                                fontFamily: 'var(--font-body)',
+                                fontSize: 13,
+                                color: '#5c4020',
+                                lineHeight: 1.75,
+                                margin: '0 0 0.85rem',
+                              }}
+                            >
+                              {paragraph}
+                            </motion.p>
+                          ))}
+                        </motion.div>
+                      </motion.div>
+                      {isLongBio && (
+                        <motion.div
+                          aria-hidden
+                          initial={false}
+                          animate={{ opacity: isExpanded ? 0 : 1 }}
+                          transition={{ duration: 0.3, ease: bioEase }}
+                          style={{
+                            position: 'absolute',
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            height: 48,
+                            background: 'linear-gradient(to bottom, rgba(250,245,236,0), #faf5ec 78%)',
+                            pointerEvents: 'none',
+                          }}
+                        />
+                      )}
+                    </div>
+
+                    {isLongBio && (
+                      <motion.button
+                        type="button"
+                        onClick={() =>
+                          setExpandedBios((prev) => ({
+                            ...prev,
+                            [member.name]: !prev[member.name],
+                          }))
+                        }
+                        aria-expanded={isExpanded}
+                        aria-label={isExpanded ? `Show less about ${member.name}` : `Show more about ${member.name}`}
+                        whileHover={{ y: isExpanded ? -1 : 1 }}
+                        whileTap={{ scale: 0.96 }}
+                        transition={{ duration: 0.2 }}
+                        style={{
+                          display: 'inline-flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          gap: 2,
+                          margin: '0.15rem auto 0',
+                          padding: '6px 10px',
+                          border: 'none',
+                          background: 'transparent',
+                          color: '#c4872a',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        <AnimatePresence mode="wait" initial={false}>
+                          <motion.span
+                            key={isExpanded ? 'less' : 'more'}
+                            initial={{ opacity: 0, y: isExpanded ? -6 : 6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: isExpanded ? 6 : -6 }}
+                            transition={{ duration: 0.22, ease: bioEase }}
+                            style={{
+                              fontFamily: 'var(--font-mono)',
+                              fontSize: 9,
+                              letterSpacing: '0.12em',
+                              textTransform: 'uppercase',
+                            }}
+                          >
+                            {isExpanded ? 'Show less' : 'More'}
+                          </motion.span>
+                        </AnimatePresence>
+                        <motion.span
+                          aria-hidden
+                          animate={{ rotate: isExpanded ? 180 : 0 }}
+                          transition={{ duration: 0.4, ease: bioEase }}
+                          style={{
+                            display: 'inline-flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            lineHeight: 0,
+                          }}
+                        >
+                          <svg width="18" height="10" viewBox="0 0 18 10" fill="none">
+                            <path d="M2 2.5 L9 7.5 L16 2.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                          <svg width="18" height="10" viewBox="0 0 18 10" fill="none" style={{ marginTop: -5, opacity: 0.55 }}>
+                            <path d="M2 2.5 L9 7.5 L16 2.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </motion.span>
+                      </motion.button>
+                    )}
+                  </div>
+                )
+              })()}
+
+              {member.showContact && (
+                <button
                   type="button"
                   onClick={() => setContactOpen(member.name)}
                   style={{
@@ -1305,18 +1527,19 @@ function TeamSection() {
                     textTransform: 'uppercase',
                     cursor: 'pointer',
                     transition: 'background-color 0.2s',
+                    marginTop: '0.5rem',
                   }}
                   onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = '#e8b554')}
                   onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = '#c4872a')}
                 >
                   Contact
-                </button>}
-              </div>
-            </div>
+                </button>
+              )}
+            </article>
           ))}
         </div>
 
-        {contactOpen && (
+        {activeMember && (
           <div
             role="dialog"
             aria-modal="true"
@@ -1347,7 +1570,7 @@ function TeamSection() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
                 <div>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: '#c4872a', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 8 }}>Get in touch</div>
-                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: isMobile ? 18 : 20, color: '#1a1208', lineHeight: 1.2, margin: 0 }}>{contactOpen}</h3>
+                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: isMobile ? 18 : 20, color: '#1a1208', lineHeight: 1.2, margin: 0 }}>{activeMember.name}</h3>
                 </div>
                 <button
                   type="button"
@@ -1361,7 +1584,7 @@ function TeamSection() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <a
-                  href="tel:+250788424508"
+                  href={`tel:${activeMember.phone.replace(/\s/g, '')}`}
                   style={{
                     display: 'flex', alignItems: 'center', gap: '0.75rem',
                     padding: '12px 16px', backgroundColor: '#1a1208', borderRadius: 10,
@@ -1370,15 +1593,19 @@ function TeamSection() {
                   onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = '0.88' }}
                   onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = '1' }}
                 >
-                  <span style={{ fontSize: 18 }}>📞</span>
+                  <span style={{ display: 'inline-flex', width: 20, height: 20, color: '#e8d4b8' }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                  </span>
                   <div>
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: '#c4872a', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 2 }}>Phone</div>
-                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#e8d4b8', fontWeight: 500 }}>+250 788 424 508</div>
+                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#e8d4b8', fontWeight: 500 }}>{activeMember.phone}</div>
                   </div>
                 </a>
 
                 <a
-                  href={`https://wa.me/${WHATSAPP_PHONE_DIGITS}?text=${encodeURIComponent(`Hello! I would like to get in touch with ${contactOpen}. Thank you.`)}`}
+                  href={`https://wa.me/${activeMember.phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hello! I would like to get in touch with ${activeMember.name}. Thank you.`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
@@ -1390,18 +1617,18 @@ function TeamSection() {
                   onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.filter = 'none' }}
                 >
                   <span style={{ display: 'inline-flex', width: 20, height: 20, color: '#fff' }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" fill="currentColor" aria-hidden>
                       <path d="M19.1 4.9A10 10 0 0 0 3 17.8L2 22l4.3-1.1A10 10 0 0 0 22 12a10 10 0 0 0-2.9-7.1Zm-7.1 15.3c-1.5 0-2.9-.4-4.1-1.2l-.3-.2-2 .5.5-2-.2-.3c-.8-1.2-1.2-2.6-1.2-4.1 0-4.5 3.7-8.2 8.2-8.2s8.2 3.7 8.2 8.2-3.7 8.3-8.1 8.3Zm8-5.9c-.3-.1-1.8-.9-2.1-1s-.5-.1-.7.1-.8 1-1 1.1c-.2.1-.4.1-.6 0-1-.5-1.8-1.1-2.4-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.4.1-.1.1-.3.1-.5s0-.4-.1-.5-.7-1.7-.9-1.8c-.2-.2-.4-.2-.6-.2h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.1 1.6 2.5 3.9 3.4 2.3.9 2.3.6 2.7.6s1.1-.4 1.3-.8c.2-.4.2-.8.1-.9-.1-.2-.2-.3-.5-.4Z" />
                     </svg>
                   </span>
                   <div>
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: 'rgba(255,255,255,0.7)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 2 }}>WhatsApp</div>
-                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#fff', fontWeight: 500 }}>+250 788 424 508</div>
+                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#fff', fontWeight: 500 }}>{activeMember.phone}</div>
                   </div>
                 </a>
 
                 <a
-                  href="mailto:geosurveyltd3@gmail.com"
+                  href={`mailto:${activeMember.email}`}
                   style={{
                     display: 'flex', alignItems: 'center', gap: '0.75rem',
                     padding: '12px 16px', backgroundColor: '#2c1f0e', borderRadius: 10,
@@ -1410,10 +1637,15 @@ function TeamSection() {
                   onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = '0.88' }}
                   onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = '1' }}
                 >
-                  <span style={{ fontSize: 18 }}>✉️</span>
+                  <span style={{ display: 'inline-flex', width: 20, height: 20, color: '#e8d4b8' }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                      <path d="m22 6-10 7L2 6" />
+                    </svg>
+                  </span>
                   <div>
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: '#c4872a', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 2 }}>Email</div>
-                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#e8d4b8', fontWeight: 500 }}>geosurveyltd3@gmail.com</div>
+                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#e8d4b8', fontWeight: 500 }}>{activeMember.email}</div>
                   </div>
                 </a>
               </div>
@@ -1422,7 +1654,7 @@ function TeamSection() {
         )}
 
         {/* Quality note */}
-        <div style={{ marginTop: '2rem', backgroundColor: '#2c1f0e', padding: isMobile ? '1.5rem' : '2rem 2.5rem', display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
+        <div style={{ marginTop: '2.5rem', backgroundColor: '#2c1f0e', padding: isMobile ? '1.5rem' : '2rem 2.5rem', display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
           {!isMobile && (
             <div style={{ flexShrink: 0, width: 48, height: 48, border: '1.5px solid #c4872a', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>✓</div>
           )}
