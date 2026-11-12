@@ -1258,15 +1258,16 @@ function TeamSection() {
       email: 'geosurveyltd3@gmail.com',
       showContact: true,
     },
-    // {
-    //   name: 'MSc. Niragire Rosine',
-    //   role: 'Quality Manager',
-    //   credential: 'MSc. Quality Management',
-    //   bio: "Supports the company's quality-management activities, technical documentation, quality-control procedures, and continuous improvement of field and laboratory operations. Contributes to maintaining consistency, traceability, and reliability throughout the company's engineering and testing activities.",
-    //   photo: '/images/team-rosine.png',
-    //   phone: '+250 788 424 508',
-    //   email: 'geosurveyltd3@gmail.com',
-    // },
+    {
+      name: 'MSc. Niragire Rosine',
+      role: 'Quality Manager',
+      credential: 'MSc. Quality Management',
+      bio: "Supports the company's quality-management activities, technical documentation, quality-control procedures, and continuous improvement of field and laboratory operations. Contributes to maintaining consistency, traceability, and reliability throughout the company's engineering and testing activities.",
+      photo: '/images/team-rosine.png',
+      phone: '+250 788 424 508',
+      email: 'geosurveyltd3@gmail.com',
+      showContact: true,
+    },
     {
       name: 'Ms. IRADUKUNDA Naome',
       role: 'Laboratory Manager and Marketing Officer',
@@ -1306,9 +1307,13 @@ function TeamSection() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: isTablet ? '1fr' : `repeat(${Math.min(members.length, 2)}, minmax(0, 1fr))`,
+            gridTemplateColumns: isMobile
+              ? '1fr'
+              : isTablet
+                ? 'repeat(2, minmax(0, 1fr))'
+                : `repeat(${Math.min(members.length, 3)}, minmax(0, 1fr))`,
             gap: isMobile ? '1.25rem' : '1.75rem',
-            maxWidth: members.length === 1 ? 420 : 920,
+            maxWidth: members.length === 1 ? 420 : members.length === 2 ? 920 : 1180,
             margin: '0 auto',
           }}
         >
